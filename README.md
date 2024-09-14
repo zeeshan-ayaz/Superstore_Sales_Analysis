@@ -76,7 +76,6 @@ This Streamlit app provides an interactive **Superstore Sales Analysis Report**.
 #### App Home Page
 ![App Home](screenshorts/front.png)
 
-> **Note**: Add screenshots of each section of your app to the `/screenshots` folder.
 
 ## Folder Structure
 
