@@ -6,16 +6,34 @@ import openpyxl
 import plotly.express as px
 import streamlit as st
 
-# Function to load data
+# Function to load default data
 @st.cache_data
-def load_data():
+def load_default_data():
     return pd.read_excel("superstore.xlsx", engine='openpyxl')
 
-# Load data
-df = load_data()
+# Sidebar for file upload or default dataset
+st.sidebar.title("Upload or Load Dataset")
 
+data_source = st.sidebar.radio(
+    "Choose Data Source:",
+    ("Default Dataset", "Upload Your Own Dataset")
+)
+
+# Load dataset based on user input
+if data_source == "Default Dataset":
+    df = load_default_data()
+    st.sidebar.success("Default dataset loaded successfully!")
+else:
+    uploaded_file = st.sidebar.file_uploader("Upload an Excel file", type=['xlsx'])
+    if uploaded_file is not None:
+        df = pd.read_excel(uploaded_file, engine='openpyxl')
+        st.sidebar.success("Dataset uploaded successfully!")
+    else:
+        st.sidebar.warning("Please upload a dataset to proceed.")
+        st.stop()  # Stop execution if no file is uploaded
+
+# The rest of your analysis code
 st.markdown('<h1 class="title">Superstore Sales Analysis Report</h1>', unsafe_allow_html=True)
-
 
 # Set the background color, sidebar width, and button styling using custom CSS
 st.markdown("""
@@ -53,11 +71,10 @@ st.markdown("""
     }
     </style>
     """, unsafe_allow_html=True)
-
 # Button to reload data
-if st.sidebar.button('Reload Data'):
-    df = load_data()
-    st.sidebar.success('Data reloaded successfully!')
+# if st.sidebar.button('Reload Data'):
+#     df = load_data()
+#     st.sidebar.success('Data reloaded successfully!')
 
 # Sidebar
 st.sidebar.title("Navigation")
@@ -70,7 +87,6 @@ page = st.sidebar.radio("Select a page", [
     "State-wise Performance",
     "Correlation Analysis"
 ])
-
 
 # Regional Performance Analysis
 if page == "Regional Performance Analysis":
@@ -191,7 +207,6 @@ elif page == "Product Category Analysis":
 
 
 # Sales Trends by Seasonality
-# Assuming you have the df dataframe ready
 elif page == "Sales Trends by Seasonality":
     st.header("3. Sales Trends by Seasonality")
     
